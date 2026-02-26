@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,12 +7,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Upload, X, ImageIcon } from "lucide-react";
 
 const BlogEditor = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const isNew = !id;
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
     title: "",
@@ -26,21 +27,26 @@ const BlogEditor = () => {
     status: "draft" as "draft" | "published",
   });
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string>("");
 
   useEffect(() => {
     if (id) {
       supabase.from("blog_posts").select("*").eq("id", id).single().then(({ data }) => {
-        if (data) setForm({
-          title: data.title,
-          slug: data.slug,
-          excerpt: data.excerpt,
-          category: data.category,
-          date: data.date,
-          author: data.author,
-          image_url: data.image_url || "",
-          content: data.content,
-          status: data.status as "draft" | "published",
-        });
+        if (data) {
+          setForm({
+            title: data.title,
+            slug: data.slug,
+            excerpt: data.excerpt,
+            category: data.category,
+            date: data.date,
+            author: data.author,
+            image_url: data.image_url || "",
+            content: data.content,
+            status: data.status as "draft" | "published",
+          });
+          if (data.image_url) setPreviewUrl(data.image_url);
+        }
       });
     }
   }, [id]);
@@ -50,6 +56,52 @@ const BlogEditor = () => {
 
   const handleTitleChange = (title: string) => {
     setForm((f) => ({ ...f, title, slug: isNew ? generateSlug(title) : f.slug }));
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be under 5MB");
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
+      const filePath = `covers/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("blog-images")
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from("blog-images")
+        .getPublicUrl(filePath);
+
+      setForm((f) => ({ ...f, image_url: publicUrl }));
+      setPreviewUrl(publicUrl);
+      toast.success("Image uploaded!");
+    } catch (err: any) {
+      toast.error(err.message || "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removeImage = () => {
+    setForm((f) => ({ ...f, image_url: "" }));
+    setPreviewUrl("");
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -106,15 +158,56 @@ const BlogEditor = () => {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label>Author</Label>
-            <Input value={form.author} onChange={(e) => setForm({ ...form, author: e.target.value })} required />
-          </div>
-          <div className="space-y-2">
-            <Label>Cover Image URL</Label>
-            <Input value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} placeholder="https://..." />
-          </div>
+        <div className="space-y-2">
+          <Label>Author</Label>
+          <Input value={form.author} onChange={(e) => setForm({ ...form, author: e.target.value })} required className="max-w-sm" />
+        </div>
+
+        {/* Cover Image Upload */}
+        <div className="space-y-3">
+          <Label>Cover Image</Label>
+          {previewUrl ? (
+            <div className="relative rounded-lg overflow-hidden border border-border">
+              <img src={previewUrl} alt="Cover preview" className="w-full h-48 object-cover" />
+              <button
+                type="button"
+                onClick={removeImage}
+                className="absolute top-2 right-2 bg-destructive text-destructive-foreground rounded-full p-1.5 hover:bg-destructive/90 transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          ) : (
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              className="border-2 border-dashed border-border rounded-lg p-8 text-center cursor-pointer hover:border-gold/50 hover:bg-muted/50 transition-colors"
+            >
+              <ImageIcon className="h-10 w-10 mx-auto text-muted-foreground/50 mb-3" />
+              <p className="text-sm text-muted-foreground font-medium">
+                {uploading ? "Uploading..." : "Click to upload cover image"}
+              </p>
+              <p className="text-xs text-muted-foreground/60 mt-1">PNG, JPG, WEBP up to 5MB</p>
+            </div>
+          )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="hidden"
+          />
+          {previewUrl && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+            >
+              <Upload className="h-4 w-4 mr-2" />
+              {uploading ? "Uploading..." : "Replace Image"}
+            </Button>
+          )}
         </div>
 
         <div className="space-y-2">
