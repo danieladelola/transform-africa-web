@@ -8,10 +8,9 @@ import { toast } from "sonner";
 import logo from "@/assets/logo.png";
 
 const Login = () => {
-  const { user, loading, signIn, signUp } = useAuth();
+  const { user, loading, signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSignUp, setIsSignUp] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   if (loading) return (
@@ -26,18 +25,11 @@ const Login = () => {
     e.preventDefault();
     setSubmitting(true);
     try {
-      if (isSignUp) {
-        const { error } = await signUp(email, password);
-        if (error) throw error;
-        toast.success("Account created! You can now log in.");
-        setIsSignUp(false);
-      } else {
-        const { error } = await signIn(email, password);
-        if (error) throw error;
-        toast.success("Welcome back!");
-      }
+      const { error } = await signIn(email, password);
+      if (error) throw error;
+      toast.success("Welcome back!");
     } catch (err: any) {
-      toast.error(err.message || "Authentication failed");
+      toast.error(err.message || "Invalid credentials");
     } finally {
       setSubmitting(false);
     }
@@ -49,9 +41,7 @@ const Login = () => {
         <div className="text-center mb-8">
           <img src={logo} alt="MNSS" className="h-12 brightness-0 invert mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-primary-foreground">Admin Dashboard</h1>
-          <p className="text-primary-foreground/60 text-sm mt-1">
-            {isSignUp ? "Create your admin account" : "Sign in to manage your site"}
-          </p>
+          <p className="text-primary-foreground/60 text-sm mt-1">Sign in to manage your site</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-card rounded-xl p-8 shadow-2xl space-y-5">
@@ -83,14 +73,8 @@ const Login = () => {
             disabled={submitting}
             className="w-full bg-gold text-foreground hover:bg-gold-dark font-semibold"
           >
-            {submitting ? "Please wait..." : isSignUp ? "Create Account" : "Sign In"}
+            {submitting ? "Signing in..." : "Sign In"}
           </Button>
-          <p className="text-center text-sm text-muted-foreground">
-            {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
-            <button type="button" onClick={() => setIsSignUp(!isSignUp)} className="text-gold hover:underline font-medium">
-              {isSignUp ? "Sign In" : "Sign Up"}
-            </button>
-          </p>
         </form>
       </div>
     </div>
