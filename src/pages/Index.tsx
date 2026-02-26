@@ -27,7 +27,7 @@ const Index = () => {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <img src={heroHome} alt="" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 hero-overlay" />
-        <div className="relative z-10 container mx-auto px-4 lg:px-8 text-center pt-20">
+        <div className="relative z-10 container mx-auto px-4 lg:px-8 text-center pt-24 pb-16">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -37,52 +37,31 @@ const Index = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="inline-block text-gold text-sm font-semibold uppercase tracking-[0.2em] mb-6"
+              className="inline-block text-gold text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] mb-6"
             >
               Strategic Consulting · Since 2005
             </motion.span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-primary-foreground leading-tight mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-primary-foreground leading-tight mb-6">
               Transforming Global Solutions
               <br />
               <span className="text-gradient">with Local Expertise</span>
             </h1>
-            <p className="text-lg md:text-xl text-primary-foreground/80 max-w-3xl mx-auto mb-12 leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-primary-foreground/80 max-w-3xl mx-auto mb-10 leading-relaxed px-2">
               MNSS Consult LTD brings over 20 years of strategic consulting expertise delivering impactful results across International Development, Business Transformation, and Project Management.
             </p>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="flex flex-wrap justify-center gap-10 md:gap-20 mb-12"
-          >
-            {stats.map((s, i) => (
-              <motion.div
-                key={s.label}
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1 + i * 0.15, type: "spring", stiffness: 200 }}
-                className="text-center"
-              >
-                <div className="text-4xl md:text-5xl font-bold text-gold">{s.value}</div>
-                <div className="text-sm text-primary-foreground/60 mt-2 tracking-wide">{s.label}</div>
-              </motion.div>
-            ))}
           </motion.div>
 
           {/* CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.2 }}
-            className="flex flex-wrap justify-center gap-4"
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 px-4 sm:px-0"
           >
-            <Button asChild size="lg" className="bg-gold text-foreground hover:bg-gold-dark font-semibold px-10 h-12 text-base shadow-lg shadow-gold/20">
+            <Button asChild size="lg" className="bg-gold text-foreground hover:bg-gold-dark font-semibold px-8 sm:px-10 h-12 text-base shadow-lg shadow-gold/20 w-full sm:w-auto">
               <Link to="/contact">Get in Touch</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-2 border-gold/60 text-gold hover:bg-gold hover:text-foreground font-semibold px-10 h-12 text-base transition-colors">
+            <Button asChild size="lg" variant="outline" className="border-2 border-gold/60 text-gold hover:bg-gold hover:text-foreground font-semibold px-8 sm:px-10 h-12 text-base transition-colors w-full sm:w-auto">
               <Link to="/services">Our Services</Link>
             </Button>
           </motion.div>
@@ -96,6 +75,23 @@ const Index = () => {
           >
             <ChevronDown className="h-6 w-6 text-primary-foreground/40 animate-bounce" />
           </motion.div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-16 bg-navy relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-navy-dark/50 to-transparent" />
+        <div className="container mx-auto px-4 lg:px-8 relative z-10">
+          <div className="flex flex-wrap justify-center gap-10 sm:gap-16 md:gap-24">
+            {stats.map((s, i) => (
+              <ScrollReveal key={s.label} delay={i * 0.1}>
+                <div className="text-center">
+                  <div className="text-4xl sm:text-5xl md:text-6xl font-bold text-gold">{s.value}</div>
+                  <div className="text-sm text-primary-foreground/60 mt-2 tracking-wide">{s.label}</div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -163,12 +159,14 @@ const Index = () => {
             {recentPosts.map((post, i) => (
               <ScrollReveal key={post.slug} delay={i * 0.15}>
                 <div className="bg-card rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-border group hover:-translate-y-1">
-                  <div className="overflow-hidden">
+                  <Link to={`/blog/${post.slug}`} className="block overflow-hidden">
                     <img src={post.image} alt={post.title} className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500" />
-                  </div>
+                  </Link>
                   <div className="p-6">
                     <span className="text-xs font-semibold text-gold uppercase tracking-wider">{post.category}</span>
-                    <h3 className="text-lg font-bold text-foreground mt-2 mb-3 line-clamp-2 group-hover:text-gold transition-colors">{post.title}</h3>
+                    <Link to={`/blog/${post.slug}`}>
+                      <h3 className="text-lg font-bold text-foreground mt-2 mb-3 line-clamp-2 group-hover:text-gold transition-colors">{post.title}</h3>
+                    </Link>
                     <p className="text-muted-foreground text-sm mb-4 line-clamp-2">{post.excerpt}</p>
                     <div className="flex items-center justify-between pt-4 border-t border-border">
                       <span className="text-xs text-muted-foreground">{post.date}</span>
