@@ -1,5 +1,5 @@
 import { Navigate, Link, Outlet, useLocation } from "react-router-dom";
-import { LayoutDashboard, FileText, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, FileText, Settings, LogOut, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import logo from "@/assets/logo.png";
@@ -7,6 +7,7 @@ import logo from "@/assets/logo.png";
 const navItems = [
   { label: "Dashboard", path: "/admin", icon: LayoutDashboard },
   { label: "Blog Manager", path: "/admin/blog", icon: FileText },
+  { label: "Messages", path: "/admin/messages", icon: Mail },
   { label: "Settings", path: "/admin/settings", icon: Settings },
 ];
 

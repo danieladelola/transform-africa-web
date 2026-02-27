@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Phone, Mail, MapPin, Linkedin, Twitter, Instagram, Send } from "lucide-react";
+import { Phone, Mail, MapPin, Linkedin, Twitter, Instagram, Send, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,23 +13,60 @@ import { supabase } from "@/integrations/supabase/client";
 const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!form.name.trim()) {
+      newErrors.name = "Name is required";
+    }
+
+    if (!form.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    if (!form.subject.trim()) {
+      newErrors.subject = "Subject is required";
+    }
+
+    if (!form.message.trim()) {
+      newErrors.message = "Message is required";
+    } else if (form.message.trim().length < 10) {
+      newErrors.message = "Message must be at least 10 characters";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      toast.error("Please fix the errors below");
+      return;
+    }
+
     setSubmitting(true);
     try {
       const { error } = await supabase.from("contact_submissions").insert({
-        name: form.name,
-        email: form.email,
-        phone: form.phone || null,
-        subject: form.subject,
-        message: form.message,
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim() || null,
+        subject: form.subject.trim(),
+        message: form.message.trim(),
+        is_read: false,
       });
       if (error) throw error;
       toast.success("Thank you! Your message has been sent. We'll get back to you shortly.");
       setForm({ name: "", email: "", phone: "", subject: "", message: "" });
-    } catch {
-      toast.error("Something went wrong. Please try again.");
+      setErrors({});
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong. Please try again later.");
     } finally {
       setSubmitting(false);
     }
@@ -51,13 +88,44 @@ const Contact = () => {
             <ScrollReveal>
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input id="name" placeholder="Your full name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+                  <Label htmlFor="name">Full Name {errors.name && <span className="text-red-500">*</span>}</Label>
+                  <Input
+                    id="name"
+                    placeholder="Your full name"
+                    value={form.name}
+                    onChange={(e) => {
+                      setForm({ ...form, name: e.target.value });
+                      if (errors.name) setErrors({ ...errors, name: "" });
+                    }}
+                    className={errors.name ? "border-red-500" : ""}
+                  />
+                  {errors.name && (
+                    <div className="flex items-center gap-2 text-sm text-red-500 mt-1">
+                      <AlertCircle className="h-4 w-4" />
+                      {errors.name}
+                    </div>
+                  )}
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="you@example.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
+                    <Label htmlFor="email">Email {errors.email && <span className="text-red-500">*</span>}</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="you@example.com"
+                      value={form.email}
+                      onChange={(e) => {
+                        setForm({ ...form, email: e.target.value });
+                        if (errors.email) setErrors({ ...errors, email: "" });
+                      }}
+                      className={errors.email ? "border-red-500" : ""}
+                    />
+                    {errors.email && (
+                      <div className="flex items-center gap-2 text-sm text-red-500 mt-1">
+                        <AlertCircle className="h-4 w-4" />
+                        {errors.email}
+                      </div>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="phone">Phone</Label>
@@ -65,12 +133,43 @@ const Contact = () => {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="subject">Subject</Label>
-                  <Input id="subject" placeholder="How can we help?" value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} required />
+                  <Label htmlFor="subject">Subject {errors.subject && <span className="text-red-500">*</span>}</Label>
+                  <Input
+                    id="subject"
+                    placeholder="How can we help?"
+                    value={form.subject}
+                    onChange={(e) => {
+                      setForm({ ...form, subject: e.target.value });
+                      if (errors.subject) setErrors({ ...errors, subject: "" });
+                    }}
+                    className={errors.subject ? "border-red-500" : ""}
+                  />
+                  {errors.subject && (
+                    <div className="flex items-center gap-2 text-sm text-red-500 mt-1">
+                      <AlertCircle className="h-4 w-4" />
+                      {errors.subject}
+                    </div>
+                  )}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="message">Message</Label>
-                  <Textarea id="message" placeholder="Tell us about your project..." rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} required />
+                  <Label htmlFor="message">Message {errors.message && <span className="text-red-500">*</span>}</Label>
+                  <Textarea
+                    id="message"
+                    placeholder="Tell us about your project..."
+                    rows={5}
+                    value={form.message}
+                    onChange={(e) => {
+                      setForm({ ...form, message: e.target.value });
+                      if (errors.message) setErrors({ ...errors, message: "" });
+                    }}
+                    className={errors.message ? "border-red-500" : ""}
+                  />
+                  {errors.message && (
+                    <div className="flex items-center gap-2 text-sm text-red-500 mt-1">
+                      <AlertCircle className="h-4 w-4" />
+                      {errors.message}
+                    </div>
+                  )}
                 </div>
                 <Button type="submit" disabled={submitting} size="lg" className="w-full bg-gold text-foreground hover:bg-gold-dark font-semibold">
                   {submitting ? "Sending..." : <><Send className="h-4 w-4 mr-2" /> Send Message</>}
@@ -126,7 +225,7 @@ const Contact = () => {
           <ScrollReveal>
             <div className="mt-16 max-w-5xl mx-auto rounded-xl overflow-hidden border border-border shadow-lg">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d253682.45932557996!2d3.1191397!3d6.548055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8b2ae68280c1%3A0xdc9e87a367c3d9cb!2sLagos%2C%20Nigeria!5e0!3m2!1sen!2s!4v1700000000000!5m2!1sen!2s"
+                src="https://www.google.com/maps?q=12%20Akerele%20Street%20Oworonsoki%20Lagos%20100001%20Nigeria&z=15&output=embed"
                 width="100%"
                 height="350"
                 style={{ border: 0 }}

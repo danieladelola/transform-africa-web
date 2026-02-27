@@ -2,6 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -17,9 +18,18 @@ import AdminLayout from "./components/admin/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
 import BlogManager from "./pages/admin/BlogManager";
 import BlogEditor from "./pages/admin/BlogEditor";
+import Messages from "./pages/admin/Messages";
 import AdminSettings from "./pages/admin/AdminSettings";
 
 const queryClient = new QueryClient();
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
 
 const AppContent = () => {
   const location = useLocation();
@@ -34,6 +44,7 @@ const AppContent = () => {
           <Route path="blog" element={<BlogManager />} />
           <Route path="blog/new" element={<BlogEditor />} />
           <Route path="blog/edit/:id" element={<BlogEditor />} />
+          <Route path="messages" element={<Messages />} />
           <Route path="settings" element={<AdminSettings />} />
         </Route>
       </Routes>
@@ -65,6 +76,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <AppContent />
       </BrowserRouter>
     </TooltipProvider>

@@ -6,16 +6,23 @@ import ScrollReveal from "@/components/ScrollReveal";
 import { blogPosts } from "@/data/blogPosts";
 import heroHome from "@/assets/hero-home.jpg";
 
-const stats = [
-  { value: "20+", label: "Years Experience" },
-  { value: "100+", label: "Clients Served" },
-  { value: "10+", label: "Sectors Covered" },
-];
 
 const services = [
-  { icon: Globe, title: "International Development Consulting", desc: "Partnering with governments and organizations across the globe with deep local knowledge." },
-  { icon: Briefcase, title: "Project & Program Management", desc: "Tailored strategies combining local realities with global standards for successful delivery." },
-  { icon: BarChart3, title: "Business Management Advisory", desc: "Navigating complex business dynamics to help businesses scale with local relevance." },
+  {
+    icon: Globe,
+    title: "International Development Consulting",
+    desc: "Working with governments and groups worldwide, backed by strong local insight and on-ground experience. We support policy design, reform plans, and capacity building that drive lasting impact.",
+  },
+  {
+    icon: Briefcase,
+    title: "Project & Program Management",
+    desc: "Practical plans that blend local needs with global best practice for delivery. We manage timelines, budgets, and teams to ensure projects stay on track and meet clear goals.",
+  },
+  {
+    icon: BarChart3,
+    title: "Business Management Advisory",
+    desc: "Guiding firms through market challenges to grow with strong local fit. We improve structure, strategy, and operations to help businesses scale with confidence and control.",
+  },
 ];
 
 const Index = () => {
@@ -78,22 +85,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-16 bg-navy relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-navy-dark/50 to-transparent" />
-        <div className="container mx-auto px-4 lg:px-8 relative z-10">
-          <div className="flex flex-wrap justify-center gap-10 sm:gap-16 md:gap-24">
-            {stats.map((s, i) => (
-              <ScrollReveal key={s.label} delay={i * 0.1}>
-                <div className="text-center">
-                  <div className="text-4xl sm:text-5xl md:text-6xl font-bold text-gold">{s.value}</div>
-                  <div className="text-sm text-primary-foreground/60 mt-2 tracking-wide">{s.label}</div>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      
 
       {/* Who We Are */}
       <section className="py-24 lg:py-32 bg-background">
@@ -127,12 +119,12 @@ const Index = () => {
           <div className="grid md:grid-cols-3 gap-8 mb-14">
             {services.map((s, i) => (
               <ScrollReveal key={s.title} delay={i * 0.15}>
-                <div className="bg-card rounded-xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-border group hover:-translate-y-1">
+                <div className="bg-card rounded-xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-border group hover:-translate-y-1 h-full flex flex-col">
                   <div className="w-16 h-16 rounded-xl bg-navy flex items-center justify-center mb-6 group-hover:bg-gold transition-colors duration-300">
                     <s.icon className="h-8 w-8 text-primary-foreground" />
                   </div>
                   <h3 className="text-xl font-bold text-foreground mb-3">{s.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{s.desc}</p>
+                  <p className="text-muted-foreground leading-relaxed flex-grow">{s.desc}</p>
                 </div>
               </ScrollReveal>
             ))}
