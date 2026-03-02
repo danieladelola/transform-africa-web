@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Globe, Briefcase, BarChart3, ChevronDown } from "lucide-react";
+import { ArrowRight, Globe, Briefcase, BarChart3, Leaf, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ScrollReveal from "@/components/ScrollReveal";
 import { blogPosts } from "@/data/blogPosts";
@@ -22,6 +22,11 @@ const services = [
     icon: BarChart3,
     title: "Business Management Advisory",
     desc: "Guiding firms through market challenges to grow with strong local fit. We improve structure, strategy, and operations to help businesses scale with confidence and control.",
+  },
+  {
+    icon: Leaf,
+    title: "Agritech",
+    desc: "MNSS delivers smart, data-driven Agritech solutions that enhance productivity, efficiency, and sustainability across the agricultural value chain.",
   },
 ];
 

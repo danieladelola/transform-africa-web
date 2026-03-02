@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Globe, Briefcase, BarChart3, Link2, Smartphone, Monitor, ArrowRight } from "lucide-react";
+import { Globe, Briefcase, BarChart3, Link2, Smartphone, Monitor, Leaf, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PageHero from "@/components/PageHero";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -36,6 +36,24 @@ const services = [
     title: "IT Consulting",
     desc: "Fast turnaround times for your IT concerns because we iterate quickly and collect much-needed requirements. From digital transformation to infrastructure modernization, we help businesses leverage technology effectively.",
   },
+  {
+    icon: Leaf,
+    title: "Agritech",
+    desc: (
+      <>
+        <p>
+          MNSS delivers smart, data-driven Agritech solutions that enhance agricultural productivity, efficiency, and sustainability. We integrate technology and analytics into farming and agribusiness operations to support better decision-making and improved outcomes across the value chain.
+        </p>
+        <ul className="mt-3 list-disc list-inside text-muted-foreground">
+          <li><strong>Precision Agriculture:</strong> Data and monitoring tools to optimize planting, irrigation, and harvesting.</li>
+          <li><strong>Farm Data Analytics:</strong> Yield forecasting, performance tracking, and risk management.</li>
+          <li><strong>Supply Chain Optimization:</strong> Technology-driven systems to streamline farm-to-market processes.</li>
+          <li><strong>Agricultural Consulting:</strong> Operational improvement and cost-efficiency strategies for agribusinesses.</li>
+        </ul>
+        <p className="mt-3">MNSS empowers farmers and agribusinesses to transition into smart agriculture— increasing yields, reducing waste, and driving profitability.</p>
+      </>
+    ),
+  },
 ];
 
 const Services = () => (
@@ -58,7 +76,11 @@ const Services = () => (
                   <s.icon className="h-8 w-8 text-primary-foreground" />
                 </div>
                 <h3 className="text-xl font-bold text-foreground mb-4 group-hover:text-gold transition-colors">{s.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{s.desc}</p>
+                  {typeof s.desc === "string" ? (
+                    <p className="text-muted-foreground leading-relaxed">{s.desc}</p>
+                  ) : (
+                    <div className="text-muted-foreground leading-relaxed">{s.desc}</div>
+                  )}
               </div>
             </ScrollReveal>
           ))}
