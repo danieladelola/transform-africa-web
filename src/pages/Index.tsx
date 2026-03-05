@@ -1,33 +1,40 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Globe, Briefcase, BarChart3, Leaf, ChevronDown } from "lucide-react";
+import { ArrowRight, Globe, Briefcase, BarChart3, ChevronDown, CheckCircle, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ScrollReveal from "@/components/ScrollReveal";
 import { blogPosts } from "@/data/blogPosts";
 import heroHome from "@/assets/hero-home.jpg";
 
-
 const services = [
   {
     icon: Globe,
-    title: "International Development Consulting",
-    desc: "Working with governments and groups worldwide, backed by strong local insight and on-ground experience. We support policy design, reform plans, and capacity building that drive lasting impact.",
+    title: "Market Entry & Expansion Strategy",
+    desc: "Navigate complex regulatory environments, cultural nuances, and competitive landscapes across Africa and emerging markets with contextual intelligence.",
   },
   {
     icon: Briefcase,
-    title: "Project & Program Management",
-    desc: "Practical plans that blend local needs with global best practice for delivery. We manage timelines, budgets, and teams to ensure projects stay on track and meet clear goals.",
+    title: "Organizational Development",
+    desc: "Transform your organization's capabilities, culture, and performance through structured change programs designed for African business environments.",
   },
   {
     icon: BarChart3,
-    title: "Business Management Advisory",
-    desc: "Guiding firms through market challenges to grow with strong local fit. We improve structure, strategy, and operations to help businesses scale with confidence and control.",
+    title: "Financial Advisory & Investment",
+    desc: "Bridge the gap between investors and opportunities through comprehensive due diligence, market analysis, and investment structuring services.",
   },
-  {
-    icon: Leaf,
-    title: "Agritech",
-    desc: "MNSS delivers smart, data-driven Agritech solutions that enhance productivity, efficiency, and sustainability across the agricultural value chain.",
-  },
+];
+
+const advantages = [
+  { title: "Local Insight, Global Standards", desc: "Over a decade of experience bridging international business practices with African market realities" },
+  { title: "Diverse Client Portfolio", desc: "Proven track record with corporates, startups, MSMEs, development partners, DFIs, NGOs, and sub-national governments" },
+  { title: "Agile Methodology", desc: "Entrepreneurial approach that delivers rapid, actionable solutions without bureaucratic delays" },
+  { title: "Sustainable Impact", desc: "Focus on long-term value creation and systemic transformation" },
+];
+
+const stats = [
+  { value: "Since 2013", label: "Established" },
+  { value: "100+", label: "Clients Served" },
+  { value: "10+", label: "Sectors Covered" },
 ];
 
 const Index = () => {
@@ -51,7 +58,7 @@ const Index = () => {
               transition={{ delay: 0.2 }}
               className="inline-block text-gold text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] mb-6"
             >
-              Strategic Consulting · Since 2005
+              Strategic Consulting · Since 2013
             </motion.span>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-primary-foreground leading-tight mb-6">
               Transforming Global Solutions
@@ -59,7 +66,7 @@ const Index = () => {
               <span className="text-gradient">with Local Expertise</span>
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-primary-foreground/80 max-w-3xl mx-auto mb-10 leading-relaxed px-2">
-              MNSS Consult LTD brings over 20 years of strategic consulting expertise delivering impactful results across International Development, Business Transformation, and Project Management.
+              Empowering businesses, institutions, and governments across Africa and beyond through strategic consulting, market intelligence, and sustainable development solutions.
             </p>
           </motion.div>
 
@@ -71,7 +78,7 @@ const Index = () => {
             className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 px-4 sm:px-0"
           >
             <Button asChild size="lg" className="bg-gold text-foreground hover:bg-gold-dark font-semibold px-8 sm:px-10 h-12 text-base shadow-lg shadow-gold/20 w-full sm:w-auto">
-              <Link to="/contact">Get in Touch</Link>
+              <Link to="/contact"><Calendar className="mr-2 h-4 w-4" /> Schedule Your Consultation</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-2 border-gold/60 text-gold hover:bg-gold hover:text-foreground font-semibold px-8 sm:px-10 h-12 text-base transition-colors w-full sm:w-auto">
               <Link to="/services">Our Services</Link>
@@ -90,24 +97,56 @@ const Index = () => {
         </div>
       </section>
 
-      
+      {/* Stats */}
+      <section className="py-16 bg-navy relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-navy-dark/50 to-transparent" />
+        <div className="container mx-auto px-4 lg:px-8 relative z-10">
+          <div className="flex flex-wrap justify-center gap-16 md:gap-24">
+            {stats.map((s, i) => (
+              <ScrollReveal key={s.label} delay={i * 0.1}>
+                <div className="text-center">
+                  <div className="text-4xl md:text-5xl font-bold text-gold">{s.value}</div>
+                  <div className="text-primary-foreground/60 mt-3 tracking-wide">{s.label}</div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      {/* Who We Are */}
+      {/* Contextual Intelligence Advantage */}
       <section className="py-24 lg:py-32 bg-background">
         <div className="container mx-auto px-4 lg:px-8">
           <ScrollReveal>
             <div className="max-w-3xl mx-auto text-center">
-              <span className="text-gold text-sm font-semibold uppercase tracking-[0.15em]">About MNSS</span>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-3 mb-6">Who We Are</h2>
+              <span className="text-gold text-sm font-semibold uppercase tracking-[0.15em]">Why MNSS</span>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-3 mb-6">Our Contextual Intelligence Advantage</h2>
               <div className="w-20 h-1 bg-gradient-to-r from-gold to-gold-light mx-auto mb-8 rounded-full" />
-              <p className="text-muted-foreground text-lg leading-relaxed mb-10">
-                At MNSS Consult, we combine contextual intelligence with global reach. Our team understands the cultural, economic, and environmental factors shaping the markets we serve — from Nigeria to the broader African continent and beyond. We equip our clients with the insights, tools, and capabilities to navigate emerging challenges and deliver long-term impact.
+              <p className="text-muted-foreground text-lg leading-relaxed mb-12">
+                Since 2013, MNSS Consulting has been the trusted partner for organizations navigating complex market dynamics across Africa and emerging economies. We deliver contextual intelligence that transforms challenges into opportunities, combining deep local expertise with global best practices.
               </p>
-              <Button asChild variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-full px-8">
-                <Link to="/about">Learn More <ArrowRight className="ml-2 h-4 w-4" /></Link>
-              </Button>
             </div>
           </ScrollReveal>
+
+          <div className="grid sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {advantages.map((a, i) => (
+              <ScrollReveal key={a.title} delay={i * 0.1}>
+                <div className="flex items-start gap-4 bg-muted rounded-xl p-6 border border-border">
+                  <CheckCircle className="h-6 w-6 text-gold shrink-0 mt-1" />
+                  <div>
+                    <h3 className="font-bold text-foreground mb-2">{a.title}</h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">{a.desc}</p>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Button asChild variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-full px-8">
+              <Link to="/about">Learn More About Us <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            </Button>
+          </div>
         </div>
       </section>
 
@@ -117,7 +156,7 @@ const Index = () => {
           <ScrollReveal>
             <div className="text-center mb-16">
               <span className="text-gold text-sm font-semibold uppercase tracking-[0.15em]">What We Do</span>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-3 mb-4">Our Services</h2>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-3 mb-4">Strategic Consulting Services</h2>
               <div className="w-20 h-1 bg-gradient-to-r from-gold to-gold-light mx-auto rounded-full" />
             </div>
           </ScrollReveal>
@@ -186,13 +225,13 @@ const Index = () => {
           <ScrollReveal>
             <span className="text-gold text-sm font-semibold uppercase tracking-[0.15em]">Let's Connect</span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary-foreground mt-3 mb-6">
-              Let's talk about your next project
+              Let's Transform Your Next Challenge into an Opportunity
             </h2>
             <p className="text-primary-foreground/70 text-lg mb-10 max-w-2xl mx-auto">
-              Whether in Nigeria, across Africa, or globally — we're ready to help you achieve transformative results.
+              Whether you're a corporate looking to expand across Africa, a development partner seeking local implementation expertise, or a government institution aiming to improve service delivery — we're ready to help.
             </p>
             <Button asChild size="lg" className="bg-gold text-foreground hover:bg-gold-dark font-semibold px-10 h-12 text-base shadow-lg shadow-gold/20 rounded-full">
-              <Link to="/contact">Contact Us</Link>
+              <Link to="/contact">Request a Consultation</Link>
             </Button>
           </ScrollReveal>
         </div>
